@@ -1,6 +1,6 @@
 # Mirage
 
-Mirage is a lightweight CLI tool that instantly generates mock APIs from a simple JSON configuration, enabling developers to prototype and test endpoints without writing backend code.
+Mirage is a lightweight CLI tool that instantly generates mock APIs from a simple JSON configuration, allowing developers to simulate real API calls, prototype, and test endpoints without writing any backend code.
 
 ## Run
 
