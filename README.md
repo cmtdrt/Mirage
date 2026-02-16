@@ -1,6 +1,6 @@
 # Mirage
 
-Mock API server in Golang. Reads a JSON file and exposes the defined routes on port 8080.
+Mirage is a lightweight CLI tool that instantly generates mock APIs from a simple JSON configuration, enabling developers to prototype and test endpoints without writing backend code.
 
 ## Run
 
