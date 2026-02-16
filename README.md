@@ -17,4 +17,67 @@ go build -o mirage.exe main.go
 
 ## Config
 
-JSON file with an `endpoints` array: `method`, `path`, `response` (and optionally `description`, `status`). See `mirage.json` for an example.
+JSON file with an `endpoints` array: `method`, `path`, `response` (and optionally `description`, `status`).
+
+## Example
+
+Given this `mirage.json`:
+
+```json
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "description": "Just saying hello",
+      "path": "/hello",
+      "response": "Hi there 👋"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users",
+      "response": {
+        "users": [
+          {
+            "id": 1,
+            "username": "cmtdrt",
+            "email": "cmtdrt@example.com",
+            "firstName": "Clément",
+            "lastName": "Drt",
+            "role": "ADMIN",
+            "isActive": true
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+This creates the following endpoints:
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/hello` | Just saying hello |
+| GET | `/api/v1/users` | Returns a list of users |
+
+**What each endpoint returns:**
+
+- **GET /hello**  
+  `"Hi there 👋"`
+
+- **GET /api/v1/users**  
+  ```json
+  {
+    "users": [
+      {
+        "id": 1,
+        "username": "cmtdrt",
+        "email": "cmtdrt@example.com",
+        "firstName": "Clément",
+        "lastName": "Drt",
+        "role": "ADMIN",
+        "isActive": true
+      }
+    ]
+  }
+  ```
