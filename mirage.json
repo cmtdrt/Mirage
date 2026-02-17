@@ -22,6 +22,15 @@
                 }
             ]
             }
+        },
+        {
+            "method": "GET",
+            "path": "/api/v1/users/{id}",
+            "response": {
+                "id": 1,
+                "username": "cmtdrt",
+                "email": "cmtdrt@example.com"
+            }
         }
     ]
   }
