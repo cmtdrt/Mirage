@@ -28,8 +28,7 @@ func main() {
 
 	// For each endpoint in config, create a route
 	for _, ep := range config.Endpoints {
-		pattern := ep.Method + " " + ep.Path
-		http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		http.HandleFunc(ep.Path, func(w http.ResponseWriter, r *http.Request) {
 			writeResponse(w, ep)
 		})
 		writeDescription(ep)
