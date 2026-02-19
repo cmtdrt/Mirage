@@ -1,40 +1,21 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
-	"net/http"
 	"os"
-	"time"
+
+	"mirage/src/config"
+	"mirage/src/example"
+	"mirage/src/server"
 )
-
-const EXAMPLE_FILE_NAME = "mirage.example.json"
-const EXAMPLE_CONTENT_FILE = "mirage-example-content.json"
-const EXAMPLE_FLAG = "--example"
-
-// Content of the JSON file
-type Input struct {
-	Endpoints []Endpoint `json:"endpoints"`
-}
-
-// Object that will become a route
-type Endpoint struct {
-	Method      string  `json:"method"`
-	Description *string `json:"description,omitempty"`
-	Path        string  `json:"path"`
-	Status      *int    `json:"status,omitempty"`
-	Delay       *int    `json:"delay,omitempty"`
-	Response    any     `json:"response"`
-}
 
 func main() {
 	var filename string
 
 	// Check for --example flag
-	if len(os.Args) >= 3 && os.Args[2] == EXAMPLE_FLAG {
-		createExampleFile()
-		filename = EXAMPLE_FILE_NAME
+	if len(os.Args) >= 3 && os.Args[2] == example.ExampleFlag {
+		example.CreateExampleFile()
+		filename = example.OutputFileName
 	} else {
 		if len(os.Args) < 3 {
 			fmt.Println("Usage: mirage serve <config.json>")
@@ -44,73 +25,10 @@ func main() {
 		filename = os.Args[2]
 	}
 
-	// Process the input and return the config
-	config := processInput(filename)
+	// Load configuration
+	cfg := config.LoadConfig(filename)
 
-	for _, ep := range config.Endpoints {
-		ep := ep
-		pattern := ep.Method + " " + ep.Path
-		http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-			writeResponse(w, ep)
-		})
-		writeDescription(ep)
-	}
-
-	fmt.Println("\nMirage running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
-func createExampleFile() {
-	// Read the example content from the template file
-	exampleContent, err := os.ReadFile(EXAMPLE_CONTENT_FILE)
-	if err != nil {
-		log.Fatalf("Failed to read example content file %s: %v", EXAMPLE_CONTENT_FILE, err)
-	}
-
-	// Copy the content to create the example file
-	err = os.WriteFile(EXAMPLE_FILE_NAME, exampleContent, 0644)
-	if err != nil {
-		log.Fatalf("Failed to create example file: %v", err)
-	}
-	fmt.Printf("Created example file: %s\n", EXAMPLE_FILE_NAME)
-}
-
-func processInput(filename string) Input {
-	// Read the JSON file
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		log.Fatalf("Failed to read file %s: %v", filename, err)
-	}
-
-	var config Input
-	if err := json.Unmarshal(data, &config); err != nil {
-		log.Fatalf("Failed to unmarshal JSON: %v", err)
-	}
-
-	fmt.Println("\n================ MIRAGE ================")
-	fmt.Println("\nFound", len(config.Endpoints), "endpoint(s)")
-	fmt.Println("")
-
-	return config
-}
-
-func writeResponse(w http.ResponseWriter, ep Endpoint) {
-	// Apply delay if specified (in milliseconds)
-	if ep.Delay != nil {
-		time.Sleep(time.Duration(*ep.Delay) * time.Millisecond)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	if ep.Status != nil {
-		w.WriteHeader(*ep.Status)
-	}
-	json.NewEncoder(w).Encode(ep.Response)
-}
-
-func writeDescription(ep Endpoint) {
-	desc := ""
-	if ep.Description != nil {
-		desc = "-> " + *ep.Description
-	}
-	fmt.Printf("%s '%s' %s\n", ep.Method, ep.Path, desc)
+	// Setup routes and start server
+	server.SetupRoutes(cfg)
+	server.StartServer()
 }
