@@ -10,6 +10,8 @@ import (
 )
 
 const EXAMPLE_FILE_NAME = "mirage.example.json"
+const EXAMPLE_CONTENT_FILE = "mirage-example-content.json"
+const EXAMPLE_FLAG = "--example"
 
 // Content of the JSON file
 type Input struct {
@@ -30,7 +32,7 @@ func main() {
 	var filename string
 
 	// Check for --example flag
-	if len(os.Args) >= 3 && os.Args[2] == "--example" {
+	if len(os.Args) >= 3 && os.Args[2] == EXAMPLE_FLAG {
 		createExampleFile()
 		filename = EXAMPLE_FILE_NAME
 	} else {
@@ -59,51 +61,18 @@ func main() {
 }
 
 func createExampleFile() {
-	exampleContent := `
-	{
-    "endpoints": [
-        {
-            "method": "GET",
-            "description": "Just saying hello",
-            "path": "/hello",
-            "delay": 1000,
-            "response": "Hi there 👋"
-        },
-        {
-            "method": "GET",
-            "path": "/api/v1/users",
-            "response": {
-            "users": [
-                {
-                    "id": 1,
-                    "username": "cmtdrt",
-                    "email": "cmtdrt@example.com",
-                    "firstName": "Clément",
-                    "lastName": "Drt",
-                    "role": "ADMIN",
-                    "isActive": true
-                }
-            ]
-            }
-        },
-        {
-            "method": "GET",
-            "path": "/api/v1/users/{id}",
-            "response": {
-                "id": 1,
-                "username": "cmtdrt",
-                "email": "cmtdrt@example.com"
-            }
-        }
-    ]
-  }`
+	// Read the example content from the template file
+	exampleContent, err := os.ReadFile(EXAMPLE_CONTENT_FILE)
+	if err != nil {
+		log.Fatalf("Failed to read example content file %s: %v", EXAMPLE_CONTENT_FILE, err)
+	}
 
-	filename := "mirage.example.json"
-	err := os.WriteFile(filename, []byte(exampleContent), 0644)
+	// Copy the content to create the example file
+	err = os.WriteFile(EXAMPLE_FILE_NAME, exampleContent, 0644)
 	if err != nil {
 		log.Fatalf("Failed to create example file: %v", err)
 	}
-	fmt.Printf("Created example file: %s\n", filename)
+	fmt.Printf("Created example file: %s\n", EXAMPLE_FILE_NAME)
 }
 
 func processInput(filename string) Input {
