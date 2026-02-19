@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const EXAMPLE_FILE_NAME = "mirage.example.json"
+
 // Content of the JSON file
 type Input struct {
 	Endpoints []Endpoint `json:"endpoints"`
@@ -25,12 +27,28 @@ type Endpoint struct {
 }
 
 func main() {
-	// Process the input and return the config
-	config := processInput()
+	var filename string
 
-	// For each endpoint in config, create a route
+	// Check for --example flag
+	if len(os.Args) >= 3 && os.Args[2] == "--example" {
+		createExampleFile()
+		filename = EXAMPLE_FILE_NAME
+	} else {
+		if len(os.Args) < 3 {
+			fmt.Println("Usage: mirage serve <config.json>")
+			fmt.Println("       mirage serve --example")
+			return
+		}
+		filename = os.Args[2]
+	}
+
+	// Process the input and return the config
+	config := processInput(filename)
+
 	for _, ep := range config.Endpoints {
-		http.HandleFunc(ep.Path, func(w http.ResponseWriter, r *http.Request) {
+		ep := ep
+		pattern := ep.Method + " " + ep.Path
+		http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
 			writeResponse(w, ep)
 		})
 		writeDescription(ep)
@@ -40,14 +58,56 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func processInput() Input {
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: mirage serve <config.json>")
-		return Input{}
-	}
+func createExampleFile() {
+	exampleContent := `
+	{
+    "endpoints": [
+        {
+            "method": "GET",
+            "description": "Just saying hello",
+            "path": "/hello",
+            "delay": 1000,
+            "response": "Hi there 👋"
+        },
+        {
+            "method": "GET",
+            "path": "/api/v1/users",
+            "response": {
+            "users": [
+                {
+                    "id": 1,
+                    "username": "cmtdrt",
+                    "email": "cmtdrt@example.com",
+                    "firstName": "Clément",
+                    "lastName": "Drt",
+                    "role": "ADMIN",
+                    "isActive": true
+                }
+            ]
+            }
+        },
+        {
+            "method": "GET",
+            "path": "/api/v1/users/{id}",
+            "response": {
+                "id": 1,
+                "username": "cmtdrt",
+                "email": "cmtdrt@example.com"
+            }
+        }
+    ]
+  }`
 
+	filename := "mirage.example.json"
+	err := os.WriteFile(filename, []byte(exampleContent), 0644)
+	if err != nil {
+		log.Fatalf("Failed to create example file: %v", err)
+	}
+	fmt.Printf("Created example file: %s\n", filename)
+}
+
+func processInput(filename string) Input {
 	// Read the JSON file
-	filename := os.Args[2]
 	data, err := os.ReadFile(filename)
 	if err != nil {
 		log.Fatalf("Failed to read file %s: %v", filename, err)
