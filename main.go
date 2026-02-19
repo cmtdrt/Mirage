@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 // Content of the JSON file
@@ -19,6 +20,7 @@ type Endpoint struct {
 	Description *string `json:"description,omitempty"`
 	Path        string  `json:"path"`
 	Status      *int    `json:"status,omitempty"`
+	Delay       *int    `json:"delay,omitempty"`
 	Response    any     `json:"response"`
 }
 
@@ -64,6 +66,11 @@ func processInput() Input {
 }
 
 func writeResponse(w http.ResponseWriter, ep Endpoint) {
+	// Apply delay if specified (in milliseconds)
+	if ep.Delay != nil {
+		time.Sleep(time.Duration(*ep.Delay) * time.Millisecond)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	if ep.Status != nil {
 		w.WriteHeader(*ep.Status)

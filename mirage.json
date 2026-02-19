@@ -4,6 +4,7 @@
             "method": "GET",
             "description": "Just saying hello",
             "path": "/hello",
+            "delay": 1000,
             "response": "Hi there 👋"
         },
         {
