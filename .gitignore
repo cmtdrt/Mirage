@@ -4,3 +4,4 @@
 .env
 *.http
 *.exe
+*.example.json
