@@ -17,7 +17,7 @@ go build -o mirage.exe main.go
 
 ## Config
 
-JSON file with an `endpoints` array: `method`, `path`, `response` (and optionally `description`, `status`).
+JSON file with an `endpoints` array: `method`, `path`, `response` (and optionally `description`, `status`, `delay`).
 
 ## Example
 
@@ -48,6 +48,19 @@ Given this `mirage.json`:
           }
         ]
       }
+    },
+    {
+      "method": "POST",
+      "description": "Create a new user",
+      "path": "/api/v1/users",
+      "status": 201,
+      "delay": 1500,
+      "response": {
+        "id": 42,
+        "username": "newuser",
+        "email": "newuser@example.com",
+        "message": "User created successfully"
+      }
     }
   ]
 }
@@ -59,6 +72,7 @@ This creates the following endpoints:
 |--------|------|-------------|
 | GET | `/hello` | Just saying hello |
 | GET | `/api/v1/users` | Returns a list of users |
+| POST | `/api/v1/users` | Create a new user (status: 201, delay: 1.5s) |
 
 **What each endpoint returns:**
 
@@ -79,5 +93,18 @@ This creates the following endpoints:
         "isActive": true
       }
     ]
+  }
+  ```
+
+- **POST /api/v1/users**  
+  Status: `201 Created`  
+  Delay: `1500ms` (1.5 seconds)  
+  Response:
+  ```json
+  {
+    "id": 42,
+    "username": "newuser",
+    "email": "newuser@example.com",
+    "message": "User created successfully"
   }
   ```
