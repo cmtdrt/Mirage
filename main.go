@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-
 	"mirage/src/cli"
 	"mirage/src/config"
+	"mirage/src/doc"
 	"mirage/src/example"
 	"mirage/src/server"
 )
@@ -12,11 +11,7 @@ import (
 func main() {
 	useExample, port, filename, err := cli.ParseFlags()
 	if err != nil {
-		fmt.Println("Usage: mirage serve <config.json>")
-		fmt.Println("       mirage serve --example")
-		fmt.Println("       mirage serve <config.json> --port=8081")
-		fmt.Println("       mirage serve --example --port=8081")
-		fmt.Printf("\nError: %v\n", err)
+		doc.DisplayUsages(err)
 		return
 	}
 
