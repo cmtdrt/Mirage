@@ -2,27 +2,27 @@ package main
 
 import (
 	"fmt"
-	"os"
 
+	"mirage/src/cli"
 	"mirage/src/config"
 	"mirage/src/example"
 	"mirage/src/server"
 )
 
 func main() {
-	var filename string
+	useExample, port, filename, err := cli.ParseFlags()
+	if err != nil {
+		fmt.Println("Usage: mirage serve <config.json>")
+		fmt.Println("       mirage serve --example")
+		fmt.Println("       mirage serve <config.json> --port=8081")
+		fmt.Println("       mirage serve --example --port=8081")
+		fmt.Printf("\nError: %v\n", err)
+		return
+	}
 
-	// Check for --example flag
-	if len(os.Args) >= 3 && os.Args[2] == example.ExampleFlag {
+	// Create example file if requested
+	if useExample {
 		example.CreateExampleFile()
-		filename = example.OutputFileName
-	} else {
-		if len(os.Args) < 3 {
-			fmt.Println("Usage: mirage serve <config.json>")
-			fmt.Println("       mirage serve --example")
-			return
-		}
-		filename = os.Args[2]
 	}
 
 	// Load configuration
@@ -30,5 +30,5 @@ func main() {
 
 	// Setup routes and start server
 	server.SetupRoutes(cfg)
-	server.StartServer()
+	server.StartServer(port)
 }

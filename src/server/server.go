@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
-const DefaultPort = ":8080"
-
-func StartServer() {
-	fmt.Println("\nMirage running on port 8080")
-	log.Fatal(http.ListenAndServe(DefaultPort, nil))
+// StartServer starts the HTTP server on the specified port
+func StartServer(port int) {
+	addr := ":" + strconv.Itoa(port)
+	fmt.Printf("\nMirage running on port %d\n", port)
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
