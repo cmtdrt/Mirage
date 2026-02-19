@@ -8,13 +8,16 @@ import (
 )
 
 const (
-	ExampleFlag = "--example"
-	PortFlag    = "--port="
+	EXAMPLE_FLAG      = "--example"
+	PORT_FLAG         = "--port="
+	DEFAULT_PORT      = 8080
+	EXAMPLE_FILE_NAME = "mirage.example.json"
+	DEFAULT_FILE_NAME = "mirage.json"
 )
 
 // ParseFlags parses command line flags and returns the configuration
 func ParseFlags() (useExample bool, port int, filename string, err error) {
-	port = 8080 // default port
+	port = DEFAULT_PORT
 	useExample = false
 
 	if len(os.Args) < 3 {
@@ -25,10 +28,10 @@ func ParseFlags() (useExample bool, port int, filename string, err error) {
 	for i := 2; i < len(os.Args); i++ {
 		arg := os.Args[i]
 
-		if arg == ExampleFlag {
+		if arg == EXAMPLE_FLAG {
 			useExample = true
-		} else if strings.HasPrefix(arg, PortFlag) {
-			portStr := strings.TrimPrefix(arg, PortFlag)
+		} else if strings.HasPrefix(arg, PORT_FLAG) {
+			portStr := strings.TrimPrefix(arg, PORT_FLAG)
 			parsedPort, err := strconv.Atoi(portStr)
 			if err != nil {
 				return false, 0, "", fmt.Errorf("invalid port value: %s", portStr)
@@ -48,13 +51,13 @@ func ParseFlags() (useExample bool, port int, filename string, err error) {
 
 	// If --example is used but no filename, use the example file
 	if useExample && filename == "" {
-		filename = "mirage.example.json"
+		filename = EXAMPLE_FILE_NAME
 	}
 
 	// If no filename and not using example, try to find mirage.json
 	if filename == "" && !useExample {
-		if _, err := os.Stat("mirage.json"); err == nil {
-			filename = "mirage.json"
+		if _, err := os.Stat(DEFAULT_FILE_NAME); err == nil {
+			filename = DEFAULT_FILE_NAME
 		} else {
 			return false, 0, "", fmt.Errorf("no config file specified and mirage.json not found")
 		}
