@@ -18,8 +18,6 @@ const (
 	GUIDE_OUTPUT_FR = "mirage-guide-fr.md"
 )
 
-// GenerateGuide writes the user guide to a file. lang must be "en" or "fr".
-// Output files: mirage-guide-en.md or mirage-guide-fr.md.
 func GenerateGuide(lang string) {
 	var content []byte
 	var filename string
