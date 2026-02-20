@@ -15,13 +15,17 @@ const (
 	DEFAULT_FILE_NAME = "mirage.json"
 )
 
-// ParseFlags parses command line flags and returns the configuration
+// ParseFlags parses command line flags for the "serve" command.
 func ParseFlags() (useExample bool, port int, filename string, err error) {
 	port = DEFAULT_PORT
 	useExample = false
 
 	if len(os.Args) < 3 {
 		return false, 0, "", fmt.Errorf("insufficient arguments")
+	}
+
+	if os.Args[1] != "serve" {
+		return false, 0, "", fmt.Errorf("unknown command: %s", os.Args[1])
 	}
 
 	// Parse all arguments starting from index 2
@@ -32,8 +36,8 @@ func ParseFlags() (useExample bool, port int, filename string, err error) {
 			useExample = true
 		} else if strings.HasPrefix(arg, PORT_FLAG) {
 			portStr := strings.TrimPrefix(arg, PORT_FLAG)
-			parsedPort, err := strconv.Atoi(portStr)
-			if err != nil {
+			parsedPort, parseErr := strconv.Atoi(portStr)
+			if parseErr != nil {
 				return false, 0, "", fmt.Errorf("invalid port value: %s", portStr)
 			}
 			if parsedPort < 1 || parsedPort > 65535 {
@@ -56,7 +60,7 @@ func ParseFlags() (useExample bool, port int, filename string, err error) {
 
 	// If no filename and not using example, try to find mirage.json
 	if filename == "" && !useExample {
-		if _, err := os.Stat(DEFAULT_FILE_NAME); err == nil {
+		if _, statErr := os.Stat(DEFAULT_FILE_NAME); statErr == nil {
 			filename = DEFAULT_FILE_NAME
 		} else {
 			return false, 0, "", fmt.Errorf("no config file specified and mirage.json not found")

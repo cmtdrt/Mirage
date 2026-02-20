@@ -6,9 +6,23 @@ import (
 	"mirage/src/doc"
 	"mirage/src/example"
 	"mirage/src/server"
+	"os"
 )
 
 func main() {
+	// Commands that only generate a file and exit
+	if len(os.Args) >= 2 {
+		switch os.Args[1] {
+		case "guide-en":
+			doc.GenerateGuide("en")
+			return
+		case "guide-fr":
+			doc.GenerateGuide("fr")
+			return
+		}
+	}
+
+	// serve command
 	useExample, port, filename, err := cli.ParseFlags()
 	if err != nil {
 		doc.DisplayUsages(err)

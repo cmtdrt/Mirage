@@ -7,5 +7,10 @@ func DisplayUsages(err error) {
 	fmt.Println("       mirage serve --example")
 	fmt.Println("       mirage serve <config.json> --port=8081")
 	fmt.Println("       mirage serve --example --port=8081")
-	fmt.Printf("\nError: %v\n", err)
+	fmt.Println("")
+	fmt.Println("       mirage guide-en   (generate mirage-guide-en.md)")
+	fmt.Println("       mirage guide-fr   (generate mirage-guide-fr.md)")
+	if err != nil {
+		fmt.Printf("\nError: %v\n", err)
+	}
 }
