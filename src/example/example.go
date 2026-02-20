@@ -12,7 +12,6 @@ var exampleContent []byte
 
 const CREATED_EXAMPLE_FILE_NAME = "mirage.example.json"
 
-// CreateExampleFile creates the example configuration file from the embedded template
 func CreateExampleFile() {
 	err := os.WriteFile(CREATED_EXAMPLE_FILE_NAME, exampleContent, 0644)
 	if err != nil {

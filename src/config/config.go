@@ -9,7 +9,6 @@ import (
 	"mirage/src/models"
 )
 
-// LoadConfig reads and parses the JSON configuration file
 func LoadConfig(filename string) models.Input {
 	data, err := os.ReadFile(filename)
 	if err != nil {
