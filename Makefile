@@ -4,7 +4,6 @@ build:
 run:
 	./mirage.exe serve mirage.json
 
-
 example:
 	./mirage.exe serve --example
 
