@@ -6,3 +6,4 @@
 *.exe
 *.example.json
 *.txt
+*-guide-*.md
