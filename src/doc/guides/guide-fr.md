@@ -69,16 +69,25 @@ mirage serve --example --port=3000
 
 Le fichier de config est du JSON avec une seule clé racine : **`endpoints`**, un tableau d’objets endpoint.
 
-### Champs d’un endpoint
+### Champs obligatoires (par endpoint)
 
-| Champ | Obligatoire | Description |
-|-------|-------------|-------------|
-| `method` | Oui | Méthode HTTP : `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, etc. |
-| `path` | Oui | Chemin URL (ex. `/api/users`). Variables de chemin supportées : `/users/{id}` |
-| `response` | Oui | Corps de la réponse : chaîne, objet ou tableau (JSON) |
-| `description` | Non | Courte description affichée au démarrage du serveur |
-| `status` | Non | Code de statut HTTP (défaut : 200) |
-| `delay` | Non | Délai en **millisecondes** avant l’envoi de la réponse |
+Ces champs doivent être présents pour chaque endpoint :
+
+| Champ | Description |
+|-------|-------------|
+| `method` | Méthode HTTP : `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, etc. |
+| `path` | Chemin URL (ex. `/api/users`). Variables de chemin supportées : `/users/{id}` |
+| `response` | Corps de la réponse : chaîne, objet ou tableau (JSON) |
+
+### Champs optionnels (par endpoint)
+
+Ces champs peuvent être omis ; des valeurs par défaut ou aucun effet s’appliquent s’ils sont absents :
+
+| Champ | Description |
+|-------|-------------|
+| `description` | Courte description affichée au démarrage du serveur |
+| `status` | Code de statut HTTP (défaut : 200) |
+| `delay` | Délai en **millisecondes** avant l’envoi de la réponse |
 
 ### Exemple minimal
 

@@ -69,16 +69,25 @@ mirage serve --example --port=3000
 
 The config file is JSON with a single top-level key: **`endpoints`**, an array of endpoint objects.
 
-### Endpoint fields
+### Required fields (per endpoint)
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `method` | Yes | HTTP method: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, etc. |
-| `path` | Yes | URL path (e.g. `/api/users`). Supports path variables: `/users/{id}` |
-| `response` | Yes | Response body: string, object, or array (JSON) |
-| `description` | No | Short description printed when the server starts |
-| `status` | No | HTTP status code (default: 200) |
-| `delay` | No | Delay in **milliseconds** before sending the response |
+These fields must be present in every endpoint:
+
+| Field | Description |
+|-------|-------------|
+| `method` | HTTP method: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, etc. |
+| `path` | URL path (e.g. `/api/users`). Supports path variables: `/users/{id}` |
+| `response` | Response body: string, object, or array (JSON) |
+
+### Optional fields (per endpoint)
+
+These fields can be omitted; defaults or no effect apply when absent:
+
+| Field | Description |
+|-------|-------------|
+| `description` | Short description printed when the server starts |
+| `status` | HTTP status code (default: 200) |
+| `delay` | Delay in **milliseconds** before sending the response |
 
 ### Minimal example
 
