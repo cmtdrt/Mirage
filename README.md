@@ -73,4 +73,4 @@ This creates `mirage-guide-en.md` or `mirage-guide-fr.md` with everything you ne
 
 ---
 
-Made with ❤️ by [Myself](https://github.com/cdrouet)
+Made with ❤️ by [Myself](https://github.com/cmtdrt)
