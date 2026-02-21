@@ -28,7 +28,7 @@
             "method": "GET",
             "path": "/api/v1/users/{id}",
             "response": {
-                "id": 1,
+                "id": "{id}",
                 "username": "cmtdrt",
                 "email": "cmtdrt@example.com"
             }
