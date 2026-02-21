@@ -20,7 +20,7 @@ func SetupRoutes(config models.Input) {
 		ep := ep
 		pattern := ep.Method + " " + ep.Path
 		http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
-			WriteResponse(w, &ep)
+			WriteResponse(w, &ep, r)
 		})
 		doc.PrintDescription(&ep)
 	}
