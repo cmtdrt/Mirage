@@ -158,19 +158,21 @@ Examples:
 - `/users/{id}` → matches `/users/1`, `/users/42`, `/users/abc`
 - `/posts/{postId}/comments/{commentId}` → matches `/posts/10/comments/5`
 
+**Using path values in the response:** any string value in the response that is exactly `"{varName}"` (e.g. `"{id}"`) is replaced by the value from the URL. So `GET /api/v1/users/32` can return a user with `"id": 32`. Numbers and decimals are typed correctly (REST convention: integer → number, decimal → number, else → string).
+
 ```json
 {
   "method": "GET",
   "path": "/api/v1/users/{id}",
   "response": {
-    "id": 1,
+    "id": "{id}",
     "username": "johndoe",
     "email": "john@example.com"
   }
 }
 ```
 
-The same response is returned for any `id`; path variables are matched by the router (Go 1.22+).
+Calling `GET /api/v1/users/32` returns `{"id": 32, "username": "johndoe", ...}`; calling `GET /api/v1/users/alice` returns `{"id": "alice", ...}`. Path variables are matched by the router (Go 1.22+).
 
 ### 5. Descriptions
 
@@ -226,7 +228,7 @@ You can generate the user guide in the current directory (no server is started):
 
 - **Config:** one JSON file with an `endpoints` array.
 - **Endpoints:** `method`, `path`, `response`; optionally `description`, `status`, `delay`.
-- **Paths:** use `{variableName}` for dynamic segments.
+- **Paths:** use `{variableName}` for dynamic segments; put `"{varName}"` in the response to inject the URL value (typed as number or string).
 - **CLI:** `serve`, `--example`, `--port=…`, and `guide-en` / `guide-fr` for generating this guide.
 
 For more examples, run `mirage serve --example` and open `mirage.example.json`.

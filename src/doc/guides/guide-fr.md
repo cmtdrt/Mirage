@@ -158,19 +158,21 @@ Exemples :
 - `/users/{id}` → matche `/users/1`, `/users/42`, `/users/abc`
 - `/posts/{postId}/comments/{commentId}` → matche `/posts/10/comments/5`
 
+**Utiliser les valeurs du chemin dans la réponse :** toute valeur de type chaîne dans la réponse qui est exactement `"{varName}"` (ex. `"{id}"`) est remplacée par la valeur issue de l’URL. Ainsi `GET /api/v1/users/32` peut renvoyer un user avec `"id": 32`. Les nombres et décimaux sont typés correctement (convention REST : entier → number, décimal → number, sinon → string).
+
 ```json
 {
   "method": "GET",
   "path": "/api/v1/users/{id}",
   "response": {
-    "id": 1,
+    "id": "{id}",
     "username": "johndoe",
     "email": "john@example.com"
   }
 }
 ```
 
-La même réponse est renvoyée pour tout `id` ; les variables de chemin sont gérées par le routeur (Go 1.22+).
+Un appel à `GET /api/v1/users/32` renvoie `{"id": 32, "username": "johndoe", ...}` ; un appel à `GET /api/v1/users/alice` renvoie `{"id": "alice", ...}`. Les variables de chemin sont gérées par le routeur (Go 1.22+).
 
 ### 5. Descriptions
 
@@ -228,7 +230,7 @@ Tu peux combiner avec d’autres options ; le guide est écrit avant le démarra
 
 - **Config :** un fichier JSON avec un tableau `endpoints`.
 - **Endpoints :** `method`, `path`, `response` ; optionnellement `description`, `status`, `delay`.
-- **Chemins :** utiliser `{nomVariable}` pour les segments dynamiques.
+- **Chemins :** utiliser `{nomVariable}` pour les segments dynamiques ; mettre `"{varName}"` dans la réponse pour injecter la valeur de l’URL (typée en number ou string).
 - **CLI :** `serve`, `--example`, `--port=…`, et `guide-en` / `guide-fr` pour générer ce guide.
 
 Pour plus d’exemples, exécuter `mirage serve --example` et ouvrir `mirage.example.json`.
