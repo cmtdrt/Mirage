@@ -26,17 +26,13 @@ Create `mirage.json`:
     {
       "method": "GET",
       "path": "/api/users/{id}",
-      "response": {"id": 1, "name": "Alice"}
+      "response": {"id": "{id}", "name": "Alice"}
     }
   ]
 }
 ```
 
-Run:
-
-```bash
-mirage serve
-```
+Run `mirage serve`. Call `GET /api/users/32` → the response will have `"id": 32`. Any `{varName}` in the response is replaced by the URL value.
 
 Your API is live on `http://localhost:8080` ✨
 
@@ -58,7 +54,7 @@ mirage serve --port=3000
 
 ## What's Inside?
 
-- **Path variables** - `/users/{id}` matches any ID
+- **Path variables** - `/users/{id}` matches any ID; put `"{id}"` in the response and it’s replaced by the URL value (numbers/decimals typed correctly)
 - **Custom status codes** - Return 201, 404, 500, etc.
 - **Response delays** - Simulate slow networks
 - **Built-in health check** - `/health` endpoint always available
