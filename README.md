@@ -73,4 +73,4 @@ This creates `mirage-guide-en.md` or `mirage-guide-fr.md` with everything you ne
 
 ---
 
-**Ready to mock?** Start with `mirage serve --example` and explore the generated `mirage.example.json` file!
+Made with ❤️ by [Myself](https://github.com/cdrouet)
