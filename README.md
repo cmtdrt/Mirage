@@ -43,7 +43,7 @@ Your API is live on `http://localhost:8080` ✨
 go build -o mirage main.go
 
 # Start with your config
-mirage serve mirage.json
+mirage serve whatever-you-want.json
 
 # Or use the built-in example
 mirage serve --example
