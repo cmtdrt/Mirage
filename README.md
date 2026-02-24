@@ -6,7 +6,7 @@ Mirage is a lightweight ![Go](https://img.shields.io/badge/-%2300ADD8.svg?logo=g
 
 ## Why Mirage?
 
-- **Instant setup** - Define endpoints in JSON, start the server, done
+- **Instant setup** - Define endpoints in JSON, start Mirage, done.
 - **Zero dependencies** - Single binary, no database, no framework
 - **Flexible** - Custom status codes, delays, path variables, and more
 - **Fast** - Built with Go, starts in milliseconds
