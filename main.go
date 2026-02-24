@@ -5,6 +5,7 @@ import (
 	"mirage/src/config"
 	"mirage/src/doc"
 	"mirage/src/example"
+	"mirage/src/logging"
 	"mirage/src/server"
 	"os"
 )
@@ -25,6 +26,12 @@ func main() {
 	// serve command
 	useExample, port, filename, err := cli.ParseFlags()
 	if err != nil {
+		doc.DisplayUsages(err)
+		return
+	}
+
+	// Initialize logging
+	if err := logging.Init(); err != nil {
 		doc.DisplayUsages(err)
 		return
 	}
