@@ -2,7 +2,7 @@
 
 **Generate mock APIs instantly from JSON. No backend code needed.**
 
-Mirage is a lightweight CLI tool that turns a simple JSON file into a fully functional HTTP API server. Perfect for frontend development, testing, prototyping, and demos.
+Mirage is a lightweight ![Go](https://img.shields.io/badge/-%2300ADD8.svg?logo=go&logoColor=white) CLI tool that turns a simple JSON file into a fully functional HTTP API server. Perfect for frontend development, testing, prototyping, and demos.
 
 ## Why Mirage?
 
