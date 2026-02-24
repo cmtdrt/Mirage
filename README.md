@@ -58,6 +58,7 @@ mirage serve --port=3000
 - **Custom status codes** - Return 201, 404, 500, etc.
 - **Response delays** - Simulate slow networks
 - **Built-in health check** - `/health` endpoint always available
+- **Request logging** - a `mirage-logs-<timestamp>.txt` file is created on startup (1 line per request) + `GET /logs` returns logs as JSON
 - **Auto-config detection** - Just run `mirage serve` if `mirage.json` exists
 
 ## Learn More
