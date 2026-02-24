@@ -70,7 +70,7 @@ mirage guide-en   # Generate English guide
 mirage guide-fr   # Generate French guide
 ```
 
-This creates `mirage-guide-en.md` or `mirage-guide-fr.md` with everything you need to know.
+This creates `mirage-guide-en.md` or `mirage-guide-fr.md` with everything you need to know about Mirage.
 
 ---
 
