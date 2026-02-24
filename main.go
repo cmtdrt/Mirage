@@ -1,13 +1,16 @@
 package main
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"mirage/src/cli"
 	"mirage/src/config"
 	"mirage/src/doc"
 	"mirage/src/example"
 	"mirage/src/logging"
 	"mirage/src/server"
-	"os"
 )
 
 func main() {
@@ -35,6 +38,15 @@ func main() {
 		doc.DisplayUsages(err)
 		return
 	}
+
+	// Handle shutdown signals to log when the API is stopped (Ctrl+C, SIGTERM, etc.).
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		sig := <-sigCh
+		logging.LogShutdown(sig.String())
+		os.Exit(0)
+	}()
 
 	// Create example file if requested
 	if useExample {

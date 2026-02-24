@@ -43,6 +43,14 @@ func Init() error {
 	return nil
 }
 
+// Writes a shutdown line in the log file for this run.
+// Reason is the signal that caused the shutdown.
+func LogShutdown(reason string) {
+	_, _ = fmt.Fprintf(logFile, "STOP  - %s - %s\n", time.Now().Format(time.RFC3339), reason)
+	_ = logFile.Close()
+	logFile = nil
+}
+
 // Appends a new entry (for /logs endpoint) and writes a line in the file.
 // One line per request: METHOD - TIMESTAMP - PATH
 func LogRequest(method, path string) {
