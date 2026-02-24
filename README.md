@@ -34,7 +34,7 @@ Create `mirage.json`:
 
 Run `mirage serve`. Call `GET /api/users/32` → the response will have `"id": 32`. Any `{varName}` in the response is replaced by the URL value.
 
-Your API is live on `http://localhost:8080` ✨
+Your API is now live on `http://localhost:8080` !
 
 ## Installation & Usage
 
