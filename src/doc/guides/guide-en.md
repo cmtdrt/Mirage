@@ -189,6 +189,39 @@ Use `description` to document endpoints. Descriptions are printed in the console
 
 ---
 
+### 6. Request logging (file + endpoint)
+
+When you start Mirage with `serve`, it creates a per-run log file in the current directory:
+
+- **Filename:** `mirage-logs-YYYYMMDD-HHMMSS.txt` (timestamp = server start time)
+- **One line per request:** `METHOD - TIMESTAMP - PATH`
+- **Header / footer:**
+  - `START - <RFC3339 timestamp>` when the process starts
+  - `STOP  - <RFC3339 timestamp> - <reason>` on graceful shutdown
+
+Example:
+
+```txt
+START - 2026-02-24T20:20:17Z
+GET - 2026-02-24T20:20:21Z - /hello
+GET - 2026-02-24T20:20:25Z - /api/v1/users/32
+STOP  - 2026-02-24T20:21:02Z - interrupt
+```
+
+Mirage also exposes an endpoint to read the same data from memory:
+
+- **`GET /logs`** → returns an array of objects like:
+  - `method`
+  - `path`
+  - `timestamp`
+
+Notes:
+- Logs are **in-memory for the current process** (reset to 0 on restart).
+- `reason` depends on how the process is stopped:
+  - Ctrl+C → `interrupt`
+  - `kill <pid>` / Docker stop / service manager → typically `terminated`
+- `kill -9` (SIGKILL) cannot be intercepted, so no STOP line in that case.
+
 ## Quick start
 
 ### 1. Run with the built-in example
