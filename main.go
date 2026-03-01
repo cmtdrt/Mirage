@@ -33,8 +33,8 @@ func main() {
 		return
 	}
 
-	// Initialize logging
-	if err := logging.Init(); err != nil {
+	// Initialize logging (one file per port: mirage-logs-{port}-{timestamp}.txt)
+	if err := logging.Init(ports); err != nil {
 		doc.DisplayUsages(err)
 		return
 	}
