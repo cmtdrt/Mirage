@@ -27,7 +27,7 @@ func main() {
 	}
 
 	// serve command
-	useExample, port, filename, err := cli.ParseFlags()
+	useExample, ports, filename, err := cli.ParseFlags()
 	if err != nil {
 		doc.DisplayUsages(err)
 		return
@@ -56,7 +56,7 @@ func main() {
 	// Load configuration
 	cfg := config.LoadConfig(filename)
 
-	// Setup routes and start server
+	// Setup routes and start server(s)
 	server.SetupRoutes(cfg)
-	server.StartServer(port)
+	server.StartServers(ports)
 }
