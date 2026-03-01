@@ -54,6 +54,7 @@ The server runs on **port 8080** by default.
 | `mirage serve` | Look for `mirage.json` in the current directory; error if not found |
 | `mirage serve --example` | Create `mirage.example.json` from the built-in example and use it |
 | `mirage serve --port=8081` | Run on port 8081 (default: 8080) |
+| `mirage serve --ports=8080,8081,8082` | Run one instance per port (one log file per port) |
 | `mirage guide-en` | Generate this guide in English as `mirage-guide-en.md` (then exit) |
 | `mirage guide-fr` | Generate this guide in French as `mirage-guide-fr.md` (then exit) |
 
@@ -61,6 +62,12 @@ Flags for `serve` can be combined, in any order:
 
 ```bash
 mirage serve --example --port=3000
+```
+
+Or run on multiple ports (same API on each port, one log file per port):
+
+```bash
+mirage serve --ports=8080,8081,8082 mirage.json
 ```
 
 ---
@@ -191,32 +198,32 @@ Use `description` to document endpoints. Descriptions are printed in the console
 
 ### 6. Request logging (file + endpoint)
 
-When you start Mirage with `serve`, it creates a per-run log file in the current directory:
+When you start Mirage with `serve`, it creates **one log file per port** in the current directory:
 
-- **Filename:** `mirage-logs-YYYYMMDD-HHMMSS.txt` (timestamp = server start time)
+- **Filename:** `mirage-logs-{port}-YYYYMMDD-HHMMSS.txt` (e.g. `mirage-logs-8080-20060102-150405.txt`). If you run with `--ports=8080,8081,8082`, you get three files (one per port).
 - **One line per request:** `METHOD - TIMESTAMP - PATH`
 - **Header / footer:**
-  - `START - <RFC3339 timestamp>` when the process starts
+  - `START - <RFC3339 timestamp> (port <num>)` when the process starts
   - `STOP  - <RFC3339 timestamp> - <reason>` on graceful shutdown
 
-Example:
+Example (`mirage-logs-8080-20060102-150405.txt`):
 
 ```txt
-START - 2026-02-24T20:20:17Z
+START - 2026-02-24T20:20:17Z (port 8080)
 GET - 2026-02-24T20:20:21Z - /hello
 GET - 2026-02-24T20:20:25Z - /api/v1/users/32
 STOP  - 2026-02-24T20:21:02Z - interrupt
 ```
 
-Mirage also exposes an endpoint to read the same data from memory:
+Mirage also exposes an endpoint to read logs **for the port that served the request**:
 
-- **`GET /logs`** → returns an array of objects like:
+- **`GET /logs`** (on a given port) → returns an array of objects for requests logged **on that port**:
   - `method`
   - `path`
   - `timestamp`
 
 Notes:
-- Logs are **in-memory for the current process** (reset to 0 on restart).
+- Logs are **in-memory per port** (reset on restart).
 - `reason` depends on how the process is stopped:
   - Ctrl+C → `interrupt`
   - `kill <pid>` / Docker stop / service manager → typically `terminated`
@@ -238,7 +245,15 @@ This creates `mirage.example.json` and starts the server with it. Handy to see a
 mirage serve mirage.json --port=3000
 ```
 
-### 3. Rely on default config file
+### 3. Run on multiple ports
+
+One API instance runs on each port; one log file is created per port (`mirage-logs-{port}-<timestamp>.txt`):
+
+```bash
+mirage serve --ports=8080,8081,8082 mirage.json
+```
+
+### 4. Rely on default config file
 
 If `mirage.json` exists in the current directory:
 
@@ -262,6 +277,6 @@ You can generate the user guide in the current directory (no server is started):
 - **Config:** one JSON file with an `endpoints` array.
 - **Endpoints:** `method`, `path`, `response`; optionally `description`, `status`, `delay`.
 - **Paths:** use `{variableName}` for dynamic segments; put `"{varName}"` in the response to inject the URL value (typed as number or string).
-- **CLI:** `serve`, `--example`, `--port=…`, and `guide-en` / `guide-fr` for generating this guide.
+- **CLI:** `serve`, `--example`, `--port=…`, `--ports=8080,8081,8082`, and `guide-en` / `guide-fr` for generating this guide.
 
 For more examples, run `mirage serve --example` and open `mirage.example.json`.

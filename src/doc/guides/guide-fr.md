@@ -54,6 +54,7 @@ Le serveur écoute par défaut sur le **port 8080**.
 | `mirage serve` | Chercher `mirage.json` dans le répertoire courant ; erreur s’il est absent |
 | `mirage serve --example` | Créer `mirage.example.json` à partir de l’exemple intégré et l’utiliser |
 | `mirage serve --port=8081` | Démarrer sur le port 8081 (défaut : 8080) |
+| `mirage serve --ports=8080,8081,8082` | Démarrer une instance sur chaque port (un fichier de log par port) |
 | `mirage guide-en` | Générer ce guide en anglais dans `mirage-guide-en.md` (puis quitter) |
 | `mirage guide-fr` | Générer ce guide en français dans `mirage-guide-fr.md` (puis quitter) |
 
@@ -61,6 +62,12 @@ Les options peuvent être combinées, dans n’importe quel ordre :
 
 ```bash
 mirage serve --example --port=3000
+```
+
+Ou démarrer sur plusieurs ports (même API sur chaque port, un fichier de log par port) :
+
+```bash
+mirage serve --ports=8080,8081,8082 mirage.json
 ```
 
 ---
@@ -191,32 +198,32 @@ Utiliser `description` pour documenter les endpoints. Les descriptions sont affi
 
 ### 6. Logging des requêtes (fichier + endpoint)
 
-Quand tu démarres Mirage avec `serve`, il crée un fichier de logs “par instance” dans le répertoire courant :
+Quand tu démarres Mirage avec `serve`, il crée **un fichier de logs par port** dans le répertoire courant :
 
-- **Nom du fichier :** `mirage-logs-YYYYMMDD-HHMMSS.txt` (timestamp = démarrage du serveur)
+- **Nom du fichier :** `mirage-logs-{port}-YYYYMMDD-HHMMSS.txt` (ex. `mirage-logs-8080-20060102-150405.txt`). Si tu lances avec `--ports=8080,8081,8082`, tu obtiens trois fichiers (un par port).
 - **1 ligne par requête :** `METHODE - TIMESTAMP - PATH`
 - **En-tête / fin :**
-  - `START - <timestamp RFC3339>` au démarrage du process
+  - `START - <timestamp RFC3339> (port <num>)` au démarrage
   - `STOP  - <timestamp RFC3339> - <reason>` lors d’un arrêt “propre”
 
-Exemple :
+Exemple (`mirage-logs-8080-20060102-150405.txt`) :
 
 ```txt
-START - 2026-02-24T20:20:17Z
+START - 2026-02-24T20:20:17Z (port 8080)
 GET - 2026-02-24T20:20:21Z - /hello
 GET - 2026-02-24T20:20:25Z - /api/v1/users/32
 STOP  - 2026-02-24T20:21:02Z - interrupt
 ```
 
-Mirage expose aussi un endpoint pour lire les mêmes infos depuis la mémoire :
+Mirage expose aussi un endpoint pour lire les logs **du port qui a servi la requête** :
 
-- **`GET /logs`** → renvoie un tableau d’objets contenant :
+- **`GET /logs`** (sur un port donné) → renvoie un tableau d’objets contenant les requêtes enregistrées **pour ce port** :
   - `method`
   - `path`
   - `timestamp`
 
 Notes :
-- Les logs sont **en mémoire pour ce process** (remis à zéro à chaque relance).
+- Les logs sont **en mémoire par port** (remis à zéro à chaque relance).
 - `reason` dépend de la façon dont tu stoppes le process :
   - Ctrl+C → `interrupt`
   - `kill <pid>` / Docker stop / service manager → souvent `terminated`
@@ -238,7 +245,15 @@ Cela crée `mirage.example.json` et démarre le serveur avec. Pratique pour voir
 mirage serve mirage.json --port=3000
 ```
 
-### 3. Utiliser le fichier de config par défaut
+### 3. Lancer sur plusieurs ports
+
+Une instance de l’API tourne sur chaque port ; un fichier de log est créé par port (`mirage-logs-{port}-<timestamp>.txt`) :
+
+```bash
+mirage serve --ports=8080,8081,8082 mirage.json
+```
+
+### 4. Utiliser le fichier de config par défaut
 
 Si `mirage.json` existe dans le répertoire courant :
 
@@ -250,12 +265,10 @@ mirage serve
 
 ## Générer ce guide
 
-Tu peux générer le guide utilisateur dans le répertoire courant :
+Tu peux générer le guide utilisateur dans le répertoire courant (aucun serveur n’est démarré) :
 
-- **Anglais :** `mirage serve --guide.en` → crée `mirage-guide-en.md`
-- **Français :** `mirage serve --guide.fr` → crée `mirage-guide-fr.md`
-
-Tu peux combiner avec d’autres options ; le guide est écrit avant le démarrage du serveur.
+- **Anglais :** `mirage guide-en` → crée `mirage-guide-en.md` et quitte
+- **Français :** `mirage guide-fr` → crée `mirage-guide-fr.md` et quitte
 
 ---
 
@@ -264,6 +277,6 @@ Tu peux combiner avec d’autres options ; le guide est écrit avant le démarra
 - **Config :** un fichier JSON avec un tableau `endpoints`.
 - **Endpoints :** `method`, `path`, `response` ; optionnellement `description`, `status`, `delay`.
 - **Chemins :** utiliser `{nomVariable}` pour les segments dynamiques ; mettre `"{varName}"` dans la réponse pour injecter la valeur de l’URL (typée en number ou string).
-- **CLI :** `serve`, `--example`, `--port=…`, et `guide-en` / `guide-fr` pour générer ce guide.
+- **CLI :** `serve`, `--example`, `--port=…`, `--ports=8080,8081,8082`, et `guide-en` / `guide-fr` pour générer ce guide.
 
 Pour plus d’exemples, exécuter `mirage serve --example` et ouvrir `mirage.example.json`.

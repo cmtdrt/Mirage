@@ -50,6 +50,9 @@ mirage serve --example
 
 # Custom port
 mirage serve --port=3000
+
+# Multiple ports (one server instance per port, one log file per port)
+mirage serve --ports=8080,8081,8082 mirage.json
 ```
 
 ## What's Inside?
@@ -58,7 +61,7 @@ mirage serve --port=3000
 - **Custom status codes** - Return 201, 404, 500, etc.
 - **Response delays** - Simulate slow networks
 - **Built-in health check** - `/health` endpoint always available
-- **Request logging** - a `mirage-logs-<timestamp>.txt` file is created on startup (1 line per request) + `GET /logs` returns logs as JSON
+- **Request logging** - one log file per port: `mirage-logs-{port}-{timestamp}.txt` (e.g. `mirage-logs-8080-20060102-150405.txt`). One line per request. `GET /logs` returns logs for the port that served the request (JSON)
 - **Auto-config detection** - Just run `mirage serve` if `mirage.json` exists
 
 ## Learn More
