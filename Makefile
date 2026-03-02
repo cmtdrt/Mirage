@@ -4,6 +4,9 @@ build:
 run:
 	./mirage.exe serve mirage.json
 
+run-multiple:
+	./mirage.exe serve --ports=8081,8082,8083
+
 example:
 	./mirage.exe serve --example
 
@@ -14,6 +17,8 @@ guide-fr:
 	./mirage.exe guide-fr
 
 start: build run
+
+start-multiple: build run-multiple
 
 start-example: build example
 
