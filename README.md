@@ -4,13 +4,6 @@
 
 Mirage is a lightweight ![Go](https://img.shields.io/badge/-%2300ADD8.svg?logo=go&logoColor=white) CLI tool that turns a simple JSON file into a fully functional HTTP API server. Perfect for frontend development, testing, prototyping, and demos.
 
-## Why Mirage?
-
-- **Instant setup** - Define endpoints in JSON, start Mirage, done.
-- **Zero dependencies** - Single binary, no database, no framework
-- **Flexible** - Custom status codes, delays, path variables, and more
-- **Fast** - Built with Go, starts in milliseconds
-
 ## Quick Example
 
 Create `mirage.json`:
